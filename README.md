@@ -33,6 +33,54 @@ Related project: **RunEverythingInParallel**
 
 ## Instructions for running
 ### Benchmark
+1) Make sure that Program.cs of the RunEverythingInParallel project look like this:
+```csharp
+using System;
+using System.Threading;
+using BenchmarkDotNet.Running; //BenchmarkRunner
+
+namespace RunEverythingInParallel
+{
+    class Program
+    {
+        //Use Release 
+        static void Main(string[] args)
+        {
+            Thread.Sleep(1000); //Wait for the WebApp to start
+            BenchmarkRunner.Run<ThrottledDownloader>(); //Add as many benchmarks as you want to run
+            Console.ReadLine();
+        }
+    }
+}
+```
+2) Build the solution in Release mode (Set the **Optimize** node in the csproj to true if it is needed)  
+3) Hit Ctrl+F5 in Visual Studio
+4) If you want to run it without VS (by using the dotnet cli) then run the LogFileServer project prior the RunEverythingInParallel
+### Debug
+1) Make sure that Program.cs of the RunEverythingInParallel project look like this:
+```csharp
+using System;
+using System.Threading;
+using BenchmarkDotNet.Running; //BenchmarkRunner
+
+namespace RunEverythingInParallel
+{
+    class Program
+    {
+        //Use Debug
+        static void Main(string[] args)
+        {
+            Thread.Sleep(1000); //Wait for the WebApp to start
+            var downloader = new ThrottledDownloader();
+            downloader.Setup();
+            downloader.RunCSharp3(); //Choose that method which exposes the implementation which you want to debug
+        }
+    }
+}
+```
+2) Build the solution in Debug mode (Set the **Optimize** node in the csproj to false if it is needed)  
+3) Hit F5 in Visual Studio
+4) Analyze the choosen code by using the [Parallel Watch, Parallel Stack and Tasks windows](https://docs.microsoft.com/en-us/visualstudio/debugger/walkthrough-debugging-a-parallel-application?view=vs-2019#using-the-parallel-stacks-window-threads-view)
 
 ## Demonstrated tools
 ### Baselines
@@ -72,6 +120,24 @@ No. |   Channel | Synchronizer | Workers via | Throttled by | File
 8 | [ParallelQuery](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelquery?view=netcore-3.0) | Task.WhenAll | Task | [WithDegreeOfParallelism](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelenumerable.withdegreeofparallelism?view=netcore-3.0#System_Linq_ParallelEnumerable_WithDegreeOfParallelism__1_System_Linq_ParallelQuery___0__System_Int32_) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_PLINQ.cs)
 9 | IEnumerable | Task.WhenAll | Task | SemaphoreSlim | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_SemaphoreSlim.cs)
 10 | IEnumerable | Task.WhenAll | Task | [BulkheadAsync](https://github.com/App-vNext/Polly/wiki/Bulkhead) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_Polly.cs)
+
+## Sample benchmark result
+BenchmarkDotNet=v0.11.5   
+OS=Windows 10.0.17134.1069 (1803/April2018Update/Redstone4)  
+Intel Core i7-8650U CPU 1.90GHz (Kaby Lake R), 1 CPU, 8 logical and 4 physical cores Frequency=2062501 Hz, Resolution=484.8482 ns
+.NET Core SDK=3.0.100  
+  Host     : .NET Core 3.0.0 (CoreCLR 4.700.19.46205, CoreFX 4.700.19.46214), 64bit RyuJIT  
+IterationCount=3  RunStrategy=ColdStart    
+
+Method | 	Mean	Error |	StdDev |	Ratio |	RatioSD |	Gen 0 |	Gen 1 |	Gen 2 |	Allocated
+--- | --- | --- | --- | --- | --- | --- | --- | ---
+BaseLine_Sequentially |	3.151 s |	1.3267 s |	0.0727 s |	1.00	0.00 |	377000.0000 |	47000.0000 |	38000.0000 |	1600419.34 KB
+BaseLine_EmbarrassinglyParallel |	1.055 s |	1.8874 s |	0.1035 s |	0.33 |	0.03 |	270000.0000 |	1000.0000 |	1000.0000 |	58.29 KB
+CSharp3 |	1.426 s |	0.7124 s |	0.0390 s |	0.45 |	0.02 |	320000.0000 |	8000.0000 |	7000.0000 |	1.98 KB
+CSharp5 |	1.943 s |	1.6989 s |	0.0931 s |	0.62 |	0.02 |	383000.0000 |	4000.0000 |	4000.0000 |	4.32 KB
+CSharp6 |	1.318 s |	0.6582 s |	0.0361 s |	0.42 |	0.00 |	367000.0000 |	1000.0000 |	1000.0000 |	22.23 KB
+CSharp8 |	1.340 s |	1.8518 s |	0.1015 s |	0.42 |	0.02 |	300000.0000 |	4000.0000 |	4000.0000 |	13.41 KB
+Bonus |	1.999 s |	2.2747 s |	0.1247 s |	0.63 |	0.04 |	405000.0000 |	3000.0000 |	3000.0000 |	30.4 KB
 
 ## Known missing sample codes
 - foreach + AsParallel
