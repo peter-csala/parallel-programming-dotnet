@@ -129,9 +129,9 @@ Intel Core i7-8650U CPU 1.90GHz (Kaby Lake R), 1 CPU, 8 logical and 4 physical c
   Host     : .NET Core 3.0.0 (CoreCLR 4.700.19.46205, CoreFX 4.700.19.46214), 64bit RyuJIT  
 IterationCount=3  RunStrategy=ColdStart    
 
-Method | 	Mean	Error |	StdDev |	Ratio |	RatioSD |	Gen 0 |	Gen 1 |	Gen 2 |	Allocated
---- | --- | --- | --- | --- | --- | --- | --- | ---
-BaseLine_Sequentially |	3.151 s |	1.3267 s |	0.0727 s |	1.00	0.00 |	377000.0000 |	47000.0000 |	38000.0000 |	1600419.34 KB
+Method | 	Mean |	Error |	StdDev |	Ratio |	RatioSD |	Gen 0 |	Gen 1 |	Gen 2 |	Allocated
+--- | --- | --- | --- | --- | --- | --- | --- | --- | ---
+BaseLine_Sequentially |	3.151 s |	1.3267 s |	0.0727 s |	1.00 |	0.00 |	377000.0000 |	47000.0000 |	38000.0000 |	1600419.34 KB
 BaseLine_EmbarrassinglyParallel |	1.055 s |	1.8874 s |	0.1035 s |	0.33 |	0.03 |	270000.0000 |	1000.0000 |	1000.0000 |	58.29 KB
 CSharp3 |	1.426 s |	0.7124 s |	0.0390 s |	0.45 |	0.02 |	320000.0000 |	8000.0000 |	7000.0000 |	1.98 KB
 CSharp5 |	1.943 s |	1.6989 s |	0.0931 s |	0.62 |	0.02 |	383000.0000 |	4000.0000 |	4000.0000 |	4.32 KB
