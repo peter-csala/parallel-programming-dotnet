@@ -91,7 +91,7 @@ namespace RunEverythingInParallel
             Thread.Sleep(1000); //Wait for the WebApp to start
             var downloader = new ThrottledDownloader();
             downloader.Setup();
-            downloader.RunCSharp3(); //Choose that method which exposes the implementation which you want to debug
+            downloader.RunExperiment<HighLevel_Foreach_AsParallel>(); 
         }
     }
 }
