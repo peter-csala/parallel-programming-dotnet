@@ -79,7 +79,7 @@ namespace RunEverythingInParallel
 ```csharp
 using System;
 using System.Threading;
-using BenchmarkDotNet.Running; //BenchmarkRunner
+using ThrottledParallelism.Strategies;
 
 namespace RunEverythingInParallel
 {
@@ -135,9 +135,10 @@ No. |   Channel | Synchronizer | Workers via | Throttled by | File
 5 | IEnumerable<Uri> | [ParallelForEachAsync](https://github.com/Dasync/AsyncEnumerable#example-3-async-parallel-for-each) | Task | ParalellelForEachAsync | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_AsyncEnumerator.cs)
 6 | HashSet<Task> | Task.**WhenAny** | Task | Manually only during initialization | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_AsyncEnumerator_Feeder.cs)
 7 | [IAsyncEnumerable<Uri>](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.iasyncenumerable-1?view=netcore-3.0) | await last Task | Task |[SemaphoreSlim](https://docs.microsoft.com/en-us/dotnet/api/system.threading.semaphoreslim?view=netcore-3.0) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_AsyncEnum_CSharp8.cs)
-8 | [ParallelQuery](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelquery?view=netcore-3.0) | Task.WhenAll | Task | [WithDegreeOfParallelism](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelenumerable.withdegreeofparallelism?view=netcore-3.0#System_Linq_ParallelEnumerable_WithDegreeOfParallelism__1_System_Linq_ParallelQuery___0__System_Int32_) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_PLINQ.cs)
-9 | IEnumerable | Task.WhenAll | Task | SemaphoreSlim | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_SemaphoreSlim.cs)
-10 | IEnumerable | Task.WhenAll | Task | [BulkheadAsync](https://github.com/App-vNext/Polly/wiki/Bulkhead) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_Polly.cs)
+8 | [ParallelQuery](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelquery?view=netcore-3.0) | Task.WhenAll | Task | [WithDegreeOfParallelism](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelenumerable.withdegreeofparallelism?view=netcore-3.0#System_Linq_ParallelEnumerable_WithDegreeOfParallelism__1_System_Linq_ParallelQuery___0__System_Int32_) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_PLINQ.cs)  
+9 | ParallelQuery | [Custom Awaiter](https://devblogs.microsoft.com/pfxteam/await-anything/) | Task | WithDegreeOfParallelism | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/feature/add_asparallel_sample/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_Foreach_AsParallel.cs)
+10 | IEnumerable | Task.WhenAll | Task | SemaphoreSlim | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_SemaphoreSlim.cs)
+11 | IEnumerable | Task.WhenAll | Task | [BulkheadAsync](https://github.com/App-vNext/Polly/wiki/Bulkhead) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_Polly.cs)
 
 ## Sample benchmark result <a name="results"></a>
 BenchmarkDotNet=v0.11.5   
@@ -158,6 +159,5 @@ CSharp8 |	1.340 s |	1.8518 s |	0.1015 s |	0.42 |	0.02 |	300000.0000 |	4000.0000 
 Bonus |	1.999 s |	2.2747 s |	0.1247 s |	0.63 |	0.04 |	405000.0000 |	3000.0000 |	3000.0000 |	30.4 KB
 
 ## Known missing sample codes <a name="missing"></a>
-- foreach + AsParallel
 - Reactive eXtensions
 - ideas are more than welcome
