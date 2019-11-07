@@ -2,6 +2,7 @@
 using System.Threading;
 
 using BenchmarkDotNet.Running; //BenchmarkRunner
+using ThrottledParallelism.Strategies;
 
 namespace RunEverythingInParallel
 {
@@ -21,7 +22,7 @@ namespace RunEverythingInParallel
         //    Thread.Sleep(1000); //Wait for the WebApp to start
         //    var downloader = new ThrottledDownloader();
         //    downloader.Setup();
-        //    downloader.RunCSharp3();
+        //    downloader.RunExperiment<HighLevel_Foreach_AsParallel>();
         //}
     }
 }

@@ -11,7 +11,7 @@ namespace RunEverythingInParallel
 {
     [HtmlExporter]
     [MemoryDiagnoser]
-    [SimpleJob(BenchmarkDotNet.Engines.RunStrategy.ColdStart, targetCount: 3)]
+    [SimpleJob(BenchmarkDotNet.Engines.RunStrategy.ColdStart, targetCount: 2)]
     public class ThrottledDownloader
     {
         DownloaderSettings settings;
@@ -29,26 +29,32 @@ namespace RunEverythingInParallel
             };
         }
 
-        [Benchmark(Baseline =true)]
-        public void RunBaseLine_Sequentially() => new BaseLine_SyncVersion().ExectureExperiment(settings);
+        [Benchmark(Baseline = true)]
+        public void RunBaseLine_Sequentially() => RunExperiment<BaseLine_SyncVersion>();
 
         [Benchmark()] //https://en.wikipedia.org/wiki/Embarrassingly_parallel
-        public void RunBaseLine_EmbarrassinglyParallel() => new BaseLine_WithoutThrottling().ExectureExperiment(settings); 
+        public void RunBaseLine_EmbarrassinglyParallel() => RunExperiment<BaseLine_WithoutThrottling>();
 
         [Benchmark]
-        public void RunCSharp3() => new LowLevel_Oldest().ExectureExperiment(settings);
+        public void RunCSharp3() => RunExperiment<LowLevel_Oldest>();
 
         [Benchmark]
-        public void RunCSharp5() => new MidLevel_Dataflow_Batch().ExectureExperiment(settings);
+        public void RunCSharp5() => RunExperiment<MidLevel_Dataflow_Batch>();
 
         [Benchmark]
-        public void RunCSharp6() => new HighLevel_PLINQ().ExectureExperiment(settings);
+        public void RunCSharp6() => RunExperiment<HighLevel_PLINQ>();
 
         [Benchmark]
-        public void RunCSharp8() => new HighLevel_AsyncEnum_CSharp8().ExectureExperiment(settings);
+        public void RunCSharp8() => RunExperiment<HighLevel_AsyncEnum_CSharp8>();
 
         [Benchmark]
-        public void RunBonus() => new HighLevel_Polly().ExectureExperiment(settings);
+        public void RunBonus() => RunExperiment<HighLevel_Polly>();
+
+        internal void RunExperiment<T>() 
+        where T: IGovernedParallelDownloader, new() 
+        {
+            new T().ExectureExperiment(settings);
+        }
     }
 
     public class DownloaderSettings

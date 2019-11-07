@@ -79,7 +79,7 @@ namespace RunEverythingInParallel
 ```csharp
 using System;
 using System.Threading;
-using BenchmarkDotNet.Running; //BenchmarkRunner
+using ThrottledParallelism.Strategies;
 
 namespace RunEverythingInParallel
 {
@@ -91,7 +91,7 @@ namespace RunEverythingInParallel
             Thread.Sleep(1000); //Wait for the WebApp to start
             var downloader = new ThrottledDownloader();
             downloader.Setup();
-            downloader.RunCSharp3(); //Choose that method which exposes the implementation which you want to debug
+            downloader.RunExperiment<HighLevel_Foreach_AsParallel>(); 
         }
     }
 }
@@ -135,9 +135,10 @@ No. |   Channel | Synchronizer | Workers via | Throttled by | File
 5 | IEnumerable<Uri> | [ParallelForEachAsync](https://github.com/Dasync/AsyncEnumerable#example-3-async-parallel-for-each) | Task | ParalellelForEachAsync | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_AsyncEnumerator.cs)
 6 | HashSet<Task> | Task.**WhenAny** | Task | Manually only during initialization | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_AsyncEnumerator_Feeder.cs)
 7 | [IAsyncEnumerable<Uri>](https://docs.microsoft.com/en-us/dotnet/api/system.collections.generic.iasyncenumerable-1?view=netcore-3.0) | await last Task | Task |[SemaphoreSlim](https://docs.microsoft.com/en-us/dotnet/api/system.threading.semaphoreslim?view=netcore-3.0) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_AsyncEnum_CSharp8.cs)
-8 | [ParallelQuery](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelquery?view=netcore-3.0) | Task.WhenAll | Task | [WithDegreeOfParallelism](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelenumerable.withdegreeofparallelism?view=netcore-3.0#System_Linq_ParallelEnumerable_WithDegreeOfParallelism__1_System_Linq_ParallelQuery___0__System_Int32_) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_PLINQ.cs)
-9 | IEnumerable | Task.WhenAll | Task | SemaphoreSlim | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_SemaphoreSlim.cs)
-10 | IEnumerable | Task.WhenAll | Task | [BulkheadAsync](https://github.com/App-vNext/Polly/wiki/Bulkhead) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_Polly.cs)
+8 | [ParallelQuery](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelquery?view=netcore-3.0) | Task.WhenAll | Task | [WithDegreeOfParallelism](https://docs.microsoft.com/en-us/dotnet/api/system.linq.parallelenumerable.withdegreeofparallelism?view=netcore-3.0#System_Linq_ParallelEnumerable_WithDegreeOfParallelism__1_System_Linq_ParallelQuery___0__System_Int32_) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_PLINQ.cs)  
+9 | ParallelQuery | [Custom Awaiter](https://devblogs.microsoft.com/pfxteam/await-anything/) | Task | WithDegreeOfParallelism | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/feature/add_asparallel_sample/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_Foreach_AsParallel.cs)
+10 | IEnumerable | Task.WhenAll | Task | SemaphoreSlim | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_SemaphoreSlim.cs)
+11 | IEnumerable | Task.WhenAll | Task | [BulkheadAsync](https://github.com/App-vNext/Polly/wiki/Bulkhead) | [Link](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/ThrottledParallelism/Strategies/3%20-%20High%20level/HighLevel_Polly.cs)
 
 ## Sample benchmark result <a name="results"></a>
 BenchmarkDotNet=v0.11.5   
@@ -164,6 +165,5 @@ If sampling is enough for you, then I encourage you to use [CodeTrack](https://w
 If tracing is needed, then you can play with the [Concurrency Visualizer](https://docs.microsoft.com/en-us/visualstudio/profiling/concurrency-visualizer?view=vs-2019) [step-by-step](https://weblogs.asp.net/dixin/parallel-linq-1-local-parallel-query-and-visualization)
 
 ## Known missing sample codes <a name="missing"></a>
-- foreach + AsParallel
 - Reactive eXtensions
 - ideas are more than welcome
