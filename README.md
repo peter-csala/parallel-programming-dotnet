@@ -17,7 +17,8 @@ This repository's main purpose is to demonstrate the various tools that the .NET
 4.3) [Mid level abstractions](#mid_level)  
 4.4) [High level abstractions](#high_level)  
 5) [Sample benchmark result](#results)  
-6) [Known missing sample codes](#missing)  
+6) [.NET Profiling](#profiling)  
+7) [Known missing sample codes](#missing)  
 
 ## Required environment <a name="env"></a>
 - .NET Core 3.0
@@ -158,10 +159,10 @@ CSharp6 |	1.318 s |	0.6582 s |	0.0361 s |	0.42 |	0.00 |	367000.0000 |	1000.0000 
 CSharp8 |	1.340 s |	1.8518 s |	0.1015 s |	0.42 |	0.02 |	300000.0000 |	4000.0000 |	4000.0000 |	13.41 KB
 Bonus |	1.999 s |	2.2747 s |	0.1247 s |	0.63 |	0.04 |	405000.0000 |	3000.0000 |	3000.0000 |	30.4 KB
 
-## .NET Profiling
+## .NET Profiling <a name="profiling"></a>
 If you want to deep dive into the execution details, I highly recommend you to use some profiling.  
 If sampling is enough for you, then I encourage you to use [CodeTrack](https://www.getcodetrack.com/)  
-![](./assets/profiling.gif)  
+![](https://github.com/peter-csala/parallel-programming-dotnet/blob/master/Assets/profiling.gif)  
 If tracing is needed, then you can play with the [Concurrency Visualizer](https://docs.microsoft.com/en-us/visualstudio/profiling/concurrency-visualizer?view=vs-2019) [step-by-step](https://weblogs.asp.net/dixin/parallel-linq-1-local-parallel-query-and-visualization)
 
 ## Known missing sample codes <a name="missing"></a>
