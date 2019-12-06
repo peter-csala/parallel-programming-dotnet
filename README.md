@@ -49,6 +49,15 @@ It is a .NET Core 3.0 console application, which is used to perform micro-benchm
 It measures execution time, GC cycles, etc.  
 Related project: **RunEverythingInParallel**
 
+---
+**NOTE**
+
+Please note that this demo is **I/O bound**.   
+Which means that using techniques like `Task.Run` or `Parallel.XYZ`, which are **CPU-bound**, does not make too much sense, because they are limited to the number of cores in the machine.   
+So, please scrutinize the provided examples with this in mind.
+
+---
+
 ## Instructions for running <a name="instruct"></a>
 ### Benchmark <a name="run_benchmark"></a>
 1) Make sure that Program.cs of the RunEverythingInParallel project look like this:
