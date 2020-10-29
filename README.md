@@ -2,7 +2,7 @@
 
 This repository's main purpose is to demonstrate the various tools that the .NET ecosystem provides us to write code that can run in parallel. Feel free to contribute. :)
 
-## Table of Content
+## Table of Contents
 1) [Required environment](#env)
 2) [Demo Application](#demo)  
 2.1) [Static File server](#server)  
